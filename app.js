@@ -28,16 +28,21 @@ function SrobConfig() {
         var promises = [];
         _.each(files, function (file) {
             var p;
-            if (file.match(/\.js$/)) {
-                // Fichier js
-                p = Q(require(file));
 
+            if(typeof file === "string") {
+                if (file.match(/\.js$/)) {
+                    // Fichier js
+                    p = Q(require(file));
+
+                } else {
+                    // Fichier Yaml
+                    p = Q.nfcall(fs.readFile, file, "utf-8")
+                        .then(function (data) {
+                            return yaml.safeLoad(data);
+                        });
+                }
             } else {
-                // Fichier Yaml
-                p = Q.nfcall(fs.readFile, file, "utf-8")
-                    .then(function (data) {
-                        return yaml.safeLoad(data);
-                    });
+                p = Q(file);
             }
 
             p = p.then(function (config) {
