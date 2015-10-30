@@ -57,7 +57,7 @@ function SrobConfig() {
                 }
 
                 if (config[includeKey] !== undefined) {
-                    return that.load(config[includeKey])
+                    return that.load(config[includeKey], replacements)
                         .then(function (includedConfig) {
                             delete config[includeKey];
                             return extend(true, config, includedConfig);
